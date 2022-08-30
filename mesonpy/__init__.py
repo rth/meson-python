@@ -844,11 +844,16 @@ class Project():
     def _configure(self, reconfigure: bool = False) -> None:
         """Configure Meson project."""
         sys_paths = mesonpy._introspection.SYSCONFIG_PATHS
+
+        pyodide_root = pathlib.Path(os.environ['PYODIDE_ROOT']) 
+        cross_file = str(pyodide_root / "tools/emscripten.meson.cross")
+
         setup_args = [
             f'--prefix={sys.base_prefix}',
             os.fspath(self._source_dir),
             os.fspath(self._build_dir),
-            f'--native-file={os.fspath(self._meson_native_file)}',
+            # f'--native-file={os.fspath(self._meson_native_file)}',
+            f"--cross-file={cross_file}",
             # TODO: Allow configuring these arguments
             '-Ddebug=false',
             '-Doptimization=2',
